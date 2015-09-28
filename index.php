@@ -53,15 +53,15 @@ if (isset($_GET['show'])){
 exit;
 }
 if (isset($_GET['delete'])) {
-    $del = $_GET ['delete'];
-    delete_item($del);
+    $del = $_GET['delete'];
+   unset($_SESSION['bd'][$del]);
     header("Location: index.php");
 exit;
 }			
 // Функция удаления объявления
-function delete_item($get_value) {
-	unset($_SESSION['bd'][$get_value]);
-}
+//function delete_item($get_value) {
+//	unset($_SESSION['bd'][$get_value]);
+//}
 
 // Вывод объявления
 if (isset($_SESSION['show'])){
@@ -241,4 +241,6 @@ if (isset($_SESSION['bd'])){
              
 	}
 }
+
 ?>
+<pre><?php print_r($_SESSION);?></pre>
