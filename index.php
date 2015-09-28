@@ -53,7 +53,8 @@ if (isset($_GET['show'])){
 exit;
 }
 if (isset($_GET['delete'])) {
-    delete_item($_GET['delete']);
+    $del = $_GET ['delete'];
+    delete_item($del);
     header("Location: index.php");
 exit;
 }			
