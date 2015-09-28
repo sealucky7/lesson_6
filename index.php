@@ -1,5 +1,20 @@
 <?php
+
 session_start();
+
+$location_id = array(641780 => 'Новосибирск', 641490 => 'Барабинск', 641510=>'Бердск', 641600=>'Искитим', 641630=>'Колывань', 641680=>'Краснообск', 641710=>'Куйбышев', 641760=>'Мошково', 641790=>'Обь', 641800=>'Ордынское', 641970=>'Черепаново');
+$category_id_1 = array(9 => 'Автомобили с пробегом', 109 => 'Новые автомобили', 14 => 'Мотоциклы и мототехника', 81 => 'Грузовики и спецтехника', 11 => 'Водный транспорт', 10 => 'Запчасти и аксессуары' );
+$category_id_2 = array(24 => 'Квартиры', 23 => 'Комнаты', 25 => 'Дома, дачи, коттеджи', 26 => 'Земельные участки', 85 => 'Гаражи и машиноместа', 42 => 'Коммерческая недвижимость', 86 => 'Недвижимость за рубежом');
+$category_id_3 = array( 111 => 'Вакансии (поиск сотрудников)', 112 => 'Резюме (поиск работы)');
+$category_id_4 = array( 114 => 'Предложения услуг', 115 => 'Запросы на услуги');
+$category_id_5 = array( 27 => 'Одежда, обувь, аксессуары', 29 => 'Детская одежда и обувь', 30 => 'Товары для детей и игрушки', 28 => 'Часы и украшения', 88 => 'Красота и здоровье');
+$category_id_6 = array( 21 => 'Бытовая техника', 20 => 'Мебель и интерьер', 87 => 'Посуда и товары для кухни', 82 => 'Продукты питания', 19 => 'Ремонт и строительство', 106 => 'Растения' );
+$category_id_7 = array( 32 => 'Аудио и видео', 97 => 'Игры, приставки и программы', 31 => 'Настольные компьютеры', 98 => 'Ноутбуки', 99 => 'Оргтехника и расходники', 96 => 'Планшеты и электронные книги', 84 => 'Телефоны', 101 => 'Товары для компьютера', 105 => 'Фототехника' );
+$category_id_8 = array( 33 => 'Билеты и путешествия', 34 => 'Велосипеды', 83 => 'Книги и журналы', 36 => 'Коллекционирование', 38 => 'Музыкальные инструменты', 102 => 'Охота и рыбалка', 39 => 'Спорт и отдых', 103 => 'Знакомства' );
+$category_id_9 = array( 89 => 'Собаки', 90 => 'Кошки', 91 => 'Птицы', 92 => 'Аквариум', 93 => 'Другие животные', 94 => 'Товары для животных' );
+$category_id_10 = array( 116 => 'Готовый бизнес', 40 => 'Оборудование для бизнеса');
+
+
 
 // Переносим данные из $_POST в $_SESSION	
 if (!isset($_SESSION['id_ad'])){
@@ -15,7 +30,7 @@ if (isset($_POST['main_form_submit'])) {
 			break;
 			case 'Сохранить' :
 				$id = $_SESSION['change_id']; 
-				unset($_SESSION['change_id']);
+				unset($_SESSION['change_id'], $_SESSION['bd'][$id]['no_mails']);
 			break;
 		}
 		
@@ -23,7 +38,7 @@ if (isset($_POST['main_form_submit'])) {
 				if ($key=='main_form_submit'){
 					continue;
 				}
-			$_SESSION['bd'][$id][$key] = trim(htmlspecialchars($value));
+			$_SESSION['bd'][$id][$key] = trim($value);
 			}
 		
 	header("Location: index.php");
@@ -73,7 +88,7 @@ if (isset($_SESSION['show'])){
         	</tr>
 			<tr>
 				<td></td>
-				<td><input type="checkbox" <?php echo isset($changeAd['no_mails']) ? 'checked=""' : '';?> value="1" name="no_mails" >Я не хочу получать вопросы по объявлению по e-mail</td>
+				<td><input type="checkbox" <?php echo isset($changeAd['no_mails']) ? 'checked=""' : '';?> value="" name="no_mails" >Я не хочу получать вопросы по объявлению по e-mail</td>
     
 			</tr>
 			<tr>
@@ -87,18 +102,20 @@ if (isset($_SESSION['show'])){
 					<select title="Выберите Ваш город" name="location_id" > 
 						<option value="">-- Выберите город --</option>
 						<option disabled="disabled">-- Города --</option>
-						<option <?php echo (isset($change_id) && $changeAd['location_id']==641780) ? 'selected=""' : '';?> data-coords=",," value="641780">Новосибирск</option>   
-						<option <?php echo (isset($change_id) && $changeAd['location_id']==641490) ? 'selected=""' : '';?> data-coords=",," value="641490">Барабинск</option>   
-						<option <?php echo (isset($change_id) && $changeAd['location_id']==641510) ? 'selected=""' : '';?> data-coords=",," value="641510">Бердск</option>   
-						<option <?php echo (isset($change_id) && $changeAd['location_id']==641600) ? 'selected=""' : '';?> data-coords=",," value="641600">Искитим</option>   
-						<option <?php echo (isset($change_id) && $changeAd['location_id']==641630) ? 'selected=""' : '';?> data-coords=",," value="641630">Колывань</option>   
-						<option <?php echo (isset($change_id) && $changeAd['location_id']==641680) ? 'selected=""' : '';?> data-coords=",," value="641680">Краснообск</option>   
-						<option <?php echo (isset($change_id) && $changeAd['location_id']==641710) ? 'selected=""' : '';?> data-coords=",," value="641710">Куйбышев</option>   
-						<option <?php echo (isset($change_id) && $changeAd['location_id']==641760) ? 'selected=""' : '';?> data-coords=",," value="641760">Мошково</option>   
-						<option <?php echo (isset($change_id) && $changeAd['location_id']==641790) ? 'selected=""' : '';?> data-coords=",," value="641790">Обь</option>   
-						<option <?php echo (isset($change_id) && $changeAd['location_id']==641800) ? 'selected=""' : '';?> data-coords=",," value="641800">Ордынское</option>   
-						<option <?php echo (isset($change_id) && $changeAd['location_id']==641970) ? 'selected=""' : '';?> data-coords=",," value="641970">Черепаново</option>   
-						<option value="999999">Выбрать другой...</option> 
+						<?php
+							$location_sel=641780;
+							foreach ($location_id as $id => $location) {
+								if (!isset($change_id) && $id ==$location_sel ){ ?>
+									<option <?php echo 'selected=""';?> data-coords=",," value="<?php echo $id;?>"><?php echo $location;?></option>
+								<?php
+								}
+								else {?>
+									<option <?php echo (isset($change_id) && $changeAd['location_id']==$id) ? 'selected=""' : '';?> data-coords=",," value="<?php echo $id;?>"><?php echo $location;?></option>   
+						
+								<?php
+								}
+							}	
+								?>
 					</select>
 				</td>
       
@@ -109,77 +126,84 @@ if (isset($_SESSION['show'])){
 					<select title="Выберите категорию объявления" name="category_id"  required>
 						<option value="">-- Выберите категорию --</option>
 							<optgroup label="Транспорт">	
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==9) ? 'selected=""' : '';?> value="9">Автомобили с пробегом</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==109) ? 'selected=""' : '';?> value="109">Новые автомобили</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==14) ? 'selected=""' : '';?> value="14">Мотоциклы и мототехника</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==81) ? 'selected=""' : '';?> value="81">Грузовики и спецтехника</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==11) ? 'selected=""' : '';?> value="11">Водный транспорт</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==10) ? 'selected=""' : '';?> value="10">Запчасти и аксессуары</option>
+								<?php
+								foreach ($category_id_1 as $id => $category) {?>
+								<option <?php echo (isset($change_id) && $changeAd['category_id']==$id) ? 'selected=""' : '';?> value="<?php echo $id;?>"><?php echo $category;?></option>
+								<?php
+								}
+								?>
 							</optgroup>
 							<optgroup label="Недвижимость">
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==24) ? 'selected=""' : '';?> value="24">Квартиры</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==23) ? 'selected=""' : '';?> value="23">Комнаты</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==25) ? 'selected=""' : '';?> value="25">Дома, дачи, коттеджи</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==26) ? 'selected=""' : '';?> value="26">Земельные участки</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==85) ? 'selected=""' : '';?> value="85">Гаражи и машиноместа</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==42) ? 'selected=""' : '';?> value="42">Коммерческая недвижимость</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==86) ? 'selected=""' : '';?> value="86">Недвижимость за рубежом</option>
+								<?php
+								foreach ($category_id_2 as $id => $category) {?>
+								<option <?php echo (isset($change_id) && $changeAd['category_id']==$id) ? 'selected=""' : '';?> value="<?php echo $id;?>"><?php echo $category;?></option>
+								<?php
+								}
+								?>
 							</optgroup>
 							<optgroup label="Работа">
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==111) ? 'selected=""' : '';?> value="111">Вакансии (поиск сотрудников)</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==112) ? 'selected=""' : '';?> value="112">Резюме (поиск работы)</option>
+								<?php
+								foreach ($category_id_3 as $id => $category) {?>
+								<option <?php echo (isset($change_id) && $changeAd['category_id']==$id) ? 'selected=""' : '';?> value="<?php echo $id;?>"><?php echo $category;?></option>
+								<?php
+								}
+								?>
 							</optgroup>
 							<optgroup label="Услуги">
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==114) ? 'selected=""' : '';?> value="114">Предложения услуг</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==115) ? 'selected=""' : '';?> value="115">Запросы на услуги</option>
+								<?php
+								foreach ($category_id_4 as $id => $category) {?>
+								<option <?php echo (isset($change_id) && $changeAd['category_id']==$id) ? 'selected=""' : '';?> value="<?php echo $id;?>"><?php echo $category;?></option>
+								<?php
+								}
+								?>
 							</optgroup>
 							<optgroup label="Личные вещи">
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==27) ? 'selected=""' : '';?> value="27">Одежда, обувь, аксессуары</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==29) ? 'selected=""' : '';?> value="29">Детская одежда и обувь</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==30) ? 'selected=""' : '';?> value="30">Товары для детей и игрушки</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==28) ? 'selected=""' : '';?> value="28">Часы и украшения</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==88) ? 'selected=""' : '';?> value="88">Красота и здоровье</option>
+								<?php
+								foreach ($category_id_5 as $id => $category) {?>
+								<option <?php echo (isset($change_id) && $changeAd['category_id']==$id) ? 'selected=""' : '';?> value="<?php echo $id;?>"><?php echo $category;?></option>
+								<?php
+								}
+								?>
 							</optgroup>
 							<optgroup label="Для дома и дачи">
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==21) ? 'selected=""' : '';?> value="21">Бытовая техника</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==20) ? 'selected=""' : '';?> value="20">Мебель и интерьер</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==87) ? 'selected=""' : '';?> value="87">Посуда и товары для кухни</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==82) ? 'selected=""' : '';?> value="82">Продукты питания</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==19) ? 'selected=""' : '';?> value="19">Ремонт и строительство</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==106) ? 'selected=""' : '';?> value="106">Растения</option>
+								<?php
+								foreach ($category_id_6 as $id => $category) {?>
+								<option <?php echo (isset($change_id) && $changeAd['category_id']==$id) ? 'selected=""' : '';?> value="<?php echo $id;?>"><?php echo $category;?></option>
+								<?php
+								}
+								?>
 							</optgroup>
 							<optgroup label="Бытовая электроника">
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==32) ? 'selected=""' : '';?> value="32">Аудио и видео</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==97) ? 'selected=""' : '';?> value="97">Игры, приставки и программы</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==31) ? 'selected=""' : '';?> value="31">Настольные компьютеры</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==98) ? 'selected=""' : '';?> value="98">Ноутбуки</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==99) ? 'selected=""' : '';?> value="99">Оргтехника и расходники</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==96) ? 'selected=""' : '';?> value="96">Планшеты и электронные книги</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==84) ? 'selected=""' : '';?> value="84">Телефоны</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==101) ? 'selected=""' : '';?> value="101">Товары для компьютера</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==105) ? 'selected=""' : '';?> value="105">Фототехника</option>
+								<?php
+								foreach ($category_id_7 as $id => $category) {?>
+								<option <?php echo (isset($change_id) && $changeAd['category_id']==$id) ? 'selected=""' : '';?> value="<?php echo $id;?>"><?php echo $category;?></option>
+								<?php
+								}
+								?>
 							</optgroup>
 							<optgroup label="Хобби и отдых">
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==33) ? 'selected=""' : '';?> value="33">Билеты и путешествия</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==34) ? 'selected=""' : '';?> value="34">Велосипеды</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==83) ? 'selected=""' : '';?> value="83">Книги и журналы</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==36) ? 'selected=""' : '';?> value="36">Коллекционирование</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==38) ? 'selected=""' : '';?> value="38">Музыкальные инструменты</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==102) ? 'selected=""' : '';?> value="102">Охота и рыбалка</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==39) ? 'selected=""' : '';?> value="39">Спорт и отдых</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==103) ? 'selected=""' : '';?> value="103">Знакомства</option>
+								<?php
+								foreach ($category_id_8 as $id => $category) {?>
+								<option <?php echo (isset($change_id) && $changeAd['category_id']==$id) ? 'selected=""' : '';?> value="<?php echo $id;?>"><?php echo $category;?></option>
+								<?php
+								}
+								?>
 							</optgroup>
 							<optgroup label="Животные">
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==89) ? 'selected=""' : '';?> value="89">Собаки</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==90) ? 'selected=""' : '';?> value="90">Кошки</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==91) ? 'selected=""' : '';?> value="91">Птицы</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==92) ? 'selected=""' : '';?> value="92">Аквариум</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==93) ? 'selected=""' : '';?> value="93">Другие животные</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==94) ? 'selected=""' : '';?> value="94">Товары для животных</option>
+								<?php
+								foreach ($category_id_9 as $id => $category) {?>
+								<option <?php echo (isset($change_id) && $changeAd['category_id']==$id) ? 'selected=""' : '';?> value="<?php echo $id;?>"><?php echo $category;?></option>
+								<?php
+								}
+								?>
 							</optgroup>
 							<optgroup label="Для бизнеса">
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==116) ? 'selected=""' : '';?> value="116">Готовый бизнес</option>
-								<option <?php echo (isset($change_id) && $changeAd['category_id']==40) ? 'selected=""' : '';?> value="40">Оборудование для бизнеса</option>
+								<?php
+								foreach ($category_id_10 as $id => $category) {?>
+								<option <?php echo (isset($change_id) && $changeAd['category_id']==$id) ? 'selected=""' : '';?> value="<?php echo $id;?>"><?php echo $category;?></option>
+								<?php
+								}
+								?>
 							</optgroup>
 					</select>
 				</td>	
@@ -211,7 +235,9 @@ if (isset($_SESSION['show'])){
 // Вывод списка 
 if (isset($_SESSION['bd'])){
 	foreach ($_SESSION['bd'] as $id => $item){
-		echo '<table border="1" cellspacing="0" cellpadding="5"><tr><td>' . $item['date'] .' </td><td> ' . '<a href="index.php?show=' . $id . '">' . $item['title'] . '</a></td>' .' <td> ' . number_format($item['price'], 2, '.', '') . ' руб.' . ' </td><td> ' . $item['firstname'] .' </td><td> ' . '<a href="index.php?delete=' . $id . '">Удалить</a>' . "</td></tr></table>\n\r";
+            
+		echo '<p>'. $item['date'] .' | ' . '<a href="index.php?show=' . $id . '">' . $item['title'] . '</a>' .' | ' . number_format($item['price'], 2, '.', '') . ' руб.' . ' | ' . $item['firstname'] .' | ' . '<a href="index.php?delete=' . $id . '">Удалить</a>' . "</p>\n\r";
+             
 	}
 }
 ?>
